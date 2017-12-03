@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-
 const
   { Transform } = require('stream'),
   https = require('https')

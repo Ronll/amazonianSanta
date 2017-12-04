@@ -2,7 +2,9 @@ const
   twitter = require('twitter'),
   { Transform } = require('stream')
 
-const GIVEAWAYCITY_TWEETER_ID = '871769148916936705'
+const 
+  GIVEAWAYCITY_TWEETER_ID = '871769148916936705',
+  HTTP_420 = '420'
 
 const client = new twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -30,8 +32,6 @@ tweeterEventStream.on('data', (event) => {
 })
 
 tweeterEventStream.on('error', (error) => {
-  if(error.message.contains(HTTP_420))
-    console.log('HTTP 420: need to slow down')
   console.log(error)
   throw error
 })

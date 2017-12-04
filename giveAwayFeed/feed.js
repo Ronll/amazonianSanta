@@ -1,7 +1,12 @@
 const
-  tweeterFeed = require('./tweeterFeedStream'),
-  tweetToGiveaway = require('./tweetToGiveawayTransform'),
+  tweeterFeed = require('./tweeterFeed'),
+  tweetToGiveaway = require('./tweetToGiveaway'),
   stream = require('stream')
 
-const readableStream = new stream.Readable({})
 const feed = tweeterFeed.pipe(tweetToGiveaway)
+
+feed.on('data', (data) => {
+  console.log(data)
+})
+
+module.exports = feed

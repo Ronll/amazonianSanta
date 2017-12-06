@@ -7,7 +7,6 @@ const
   AMAZONGIVEAWAYID_REGEX = /g\/(.*$)/
 
 const tweetToGiveawayIDTransform = new Transform({
-  decodeStrings: true,
   transform(tweetText, encoding, callback) {
     
     let validTweet = validateTweetFormat(tweetText)

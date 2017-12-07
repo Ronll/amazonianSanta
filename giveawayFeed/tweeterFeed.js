@@ -16,6 +16,7 @@ const client = new twitter({
 const
   tweeterEventStream = client.stream('statuses/filter', {follow: GIVEAWAYCITY_TWEETER_ID}),
   stream = new Transform({
+    objectMode: true,
     transform(chunk, encoding, callback) {
       callback(null, chunk)
     }

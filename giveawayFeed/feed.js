@@ -3,6 +3,19 @@ const
   tweetToGiveaway = require('./tweetToGiveaway'),
   stream = require('stream')
 
-const feed = tweeterFeed.pipe(tweetToGiveaway)
+class giveawayFeed {
+  constructor() {
+    this._stream = tweeterFeed.pipe(tweetToGiveaway)
+  }
+  subscribe(callback){
+    this._stream.on('readable', () => {
+      while(this.getGiveawayID())
+        callback(giveawayID)
+    })
+  }
+  getGiveawayID(){
+    return this._stream.read()
+  }
+}
 
-module.exports = feed
+module.exports = giveawayFeed

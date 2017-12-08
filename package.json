@@ -9,6 +9,7 @@
   "author": "Ron Lapushner",
   "license": "ISC",
   "dependencies": {
+    "puppeteer": "^0.13.0",
     "request-promise-native": "^1.0.5",
     "twitter": "^1.7.1"
   }

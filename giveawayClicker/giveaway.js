@@ -20,3 +20,25 @@ class Giveaway {
     
   }
 }
+
+class VideoGiveaway extends Giveaway {
+  constructor(id){
+    super(id)
+  }
+  async participateGiveaway(){
+    
+  }
+}
+
+async function openGiveawayPage(id){
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+
+  await page.goto(AMAZON_GIVEAWAY_URL + id)
+
+  return page
+}
+
+async function isPageLoggedIn(page){
+  await page.
+}

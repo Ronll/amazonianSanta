@@ -1,6 +1,13 @@
-const puppeteer = require('puppeteer')
-
 const 
+  puppeteer = require('puppeteer'),
+  devices = require('puppeteer/DeviceDescriptors')
+
+validateCreds()
+
+const
+  DEVICE_TO_EMULATE = devices['iPad'],
+  AMAZON_USERNAME = process.env.AMAZON_USERNAME,
+  AMAZON_PASSWORD = process.env.AMAZON_PASSWORD,
   EMAIL_INPUT_SELECTOR = 'input[type="email"]',
   PASSWORD_INPUT_SELECTOR = 'input[type="password"]',
   SUBMINT_INPUT_SELECTOR = 'input[type="submit"]',
@@ -9,19 +16,38 @@ const
 
 let sessionCookies = null
 
+function validateCreds(){
+  if(!process.env.AMAZON_USERNAME || !process.env.AMAZON_PASSWORD)
+    throw 'missing amazon credentials'
+}
+
 async function getNewAmazonSession(){
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({headless: false})
   const page = await browser.newPage()
+  await page.emulate(DEVICE_TO_EMULATE)
+  // await page.setRequestInterception(true)
+  // let count = { POST: 0, GET : 0 }
+  // await page.on('request', (req) => {
+  //   console.log(req)
+  //   count[req.method]++
+  //   req.continue()
+  // })
 
   await page.goto(LOGIN_URL)
+  await page.screenshot({path: 'beforelogin.png'})
 
   let emailInputElement = await page.$(EMAIL_INPUT_SELECTOR)
-  await emailInputElement.type(process.env.AMAZON_USERNAME)
+  await emailInputElement.type(AMAZON_USERNAME, {delay: 100})
 
   let passwordInputElement = await page.$(PASSWORD_INPUT_SELECTOR)
-  await passwordInputElement.type(process.env.AMAZON_PASSWORD)
+  await passwordInputElement.type(AMAZON_PASSWORD, {delay: 100})
+
+  await page.screenshot({path: 'beforesubmit.png'})
 
   await page.click(SUBMINT_INPUT_SELECTOR)
+  await page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
+
+  await page.screenshot({path: 'aftersubmit.png'})
 
   const cookies = await page.cookies(AMAZON_URL)
 
@@ -32,6 +58,8 @@ async function getNewAmazonSession(){
 async function getAmazonSession(){
   if(sessionCookies === null)
     sessionCookies = await getNewAmazonSession()
-  else
-    return sessionCookies
+  
+  return sessionCookies
 }
+
+module.exports = getAmazonSession

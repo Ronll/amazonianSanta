@@ -1,4 +1,3 @@
-;(async () => {
   const puppeteer = require('puppeteer')
   
   const getAmazonSession = require('./getAmazonSession')
@@ -21,19 +20,69 @@
     DID_NOT_WIN = 'you didn\'t win'
   
   class Giveaway {
-    constructor(giveawayID){
-      this._id = giveawayID
+    constructor(amazonID){
+      this.id = amazonID
+      this.page
+      this._didWin = null
     }
-    async participateGiveaway(){
+    get didWin(){
+      if(this._didWin === null)
+        throw 'didWin never set; should not have been accessed'
+      else
+        return this._didWin
+    }
+    set didWin(conclusion){
+      this._didWin = conclusion
+    }
+    async participate(){
+      this.page = await this.openGiveawayPage()
+    }
+    async openGiveawayPage(){
+      const browser = await puppeteer.launch({headless: false})
+      const page = await browser.newPage()
+      await page.setCookie(...SESSION_COOKIES)
+    
+      await page.goto(AMAZON_GIVEAWAY_URL + this.id, {waitUntil: 'networkidle0'})
       
+      if(await isPageLoggedOut(page))
+        throw 'logged out'
+    
+      return page
+    }
+    async isPageLoggedOut(page){
+      let el = await page.$(SIGN_IN_INPUT_SELECTOR)
+      if(el)
+        return true
+      else
+        return false
+    }
+    async openBox(){
+      try{
+        await this.page.waitForSelector(BOX_DIV_SELECTOR, {visible: true})
+        await this.page.click(BOX_DIV_SELECTOR)
+      }catch(e){
+        await this.page.screenshot({path: 'could_not_open_box.png'})
+        throw 'could not open box'
+      }
+    }
+    async storeResult(){
+      await this.page.waitForSelector(RESULT_SPAN_SELECTOR, {visible: true})
+      let el = await this.page.$(RESULT_SPAN_SELECTOR)
+      let valueFieldProperty = await el.getProperty('innerHTML')
+      let result = await valueFieldProperty.jsonValue()
+    
+      if(result.includes(DID_NOT_WIN))
+        return false
+      else
+        return true
     }
   }
   
   class NoReqGiveaway extends Giveaway {
-    async participateGiveaway(){
-      const page = await openGiveawayPage(this._id)
-      let didWin = await openBoxAndGetResult(page)
-      return didWin
+    async participate(){
+      super()
+      await this.openBox()
+      await this.storeResult()
     }
   }
   
@@ -41,62 +90,7 @@
     constructor(id){
       super(id)
     }
-    async participateGiveaway(){
+    async participate(){
       
     }
   }
-  
-  let noreq = new NoReqGiveaway('47993fd4a1fbe61c')
-  let res = await noreq.participateGiveaway()
-  
-  console.log(res)
-  
-  async function openGiveawayPage(giveawayID){
-    const browser = await puppeteer.launch({headless: false})
-    const page = await browser.newPage()
-    await page.setCookie(...SESSION_COOKIES)
-  
-    await page.goto(AMAZON_GIVEAWAY_URL + giveawayID, {waitUntil: 'networkidle0'})
-    
-    if(await isPageLoggedOut(page))
-      throw 'logged out'
-  
-    return page
-  }
-  
-  async function isPageLoggedOut(page){
-    let el = await page.$(SIGN_IN_INPUT_SELECTOR)
-    if(el)
-      return true
-    else
-      return false
-  }
-  
-  async function openBoxAndGetResult(page){
-    await openBox(page)
-    let didWin = await getResult(page)
-    return didWin
-  }
-  
-  async function openBox(page){
-    try{
-      await page.waitForSelector(BOX_DIV_SELECTOR, {visible: true})
-      await page.click(BOX_DIV_SELECTOR)
-    }catch(e){
-      await page.screenshot({path: 'could_not_open_box.png'})
-      throw 'could not open box'
-    }
-  }
-  
-  async function getResult(page){
-    await page.waitForSelector(RESULT_SPAN_SELECTOR, {visible: true})
-    let el = page.$(RESULT_SPAN_SELECTOR)
-    let valueFieldProperty = await el.getProperty('value')
-    let result = await valueFieldProperty.jsonValue()
-  
-    if(result.includes(DID_NOT_WIN))
-      return false
-    else
-      return true
-  }
-})()

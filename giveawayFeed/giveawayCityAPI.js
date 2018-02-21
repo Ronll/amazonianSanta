@@ -1,5 +1,7 @@
-const fs = require('fs');
-const request = require('request-promise-native')
+const
+  fs = require('fs'),
+  querystring = require('querystring'),
+  request = require('request-promise-native')
 
 const
   URL = 'https://giveaway.city/ajax/UpdateService',
@@ -10,13 +12,13 @@ const
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Referer': 'https://giveaway.city/',
-    'X-Requested-With': 'XMLHttpRequest',
+    'X-Requested-With': 'XMLHttpRequest ',
     'Connection': 'keep-alive'
   }
 
 class giveawayCityAPI {
   constructor(){
-    this._lastUpdate = null
+    this._lastTimeRequested = null
     this._headers = HEADERS,
     this._url = URL
   }
@@ -28,27 +30,37 @@ class giveawayCityAPI {
       body: this._generateBody()
     }
 
-    return request(options)
+    let getNewGiveaways = request(options)
+    .then((res) => {
+      let JSONRes = JSON.parse(res)
+      let newGiveaways = JSONRes["Records"]["new_giveaways"]["Records"]
+      this._lastTimeRequested = new Date()
+      return newGiveaways
+    }).catch((err) => {
+      console.log('error with request to giveawaycity, retrying...')
+      console.log(err)
+    })
+
+    return getNewGiveaways
   }
   _generateBody(){
-    return `actions%5B%5D=get_new&start_time=${this.lastUpdate}`
+    let bodyString = 
+      querystring.stringify({ "actions[]" : "get_new" , "start_time": this.lastTimeRequested})
+    
+    return bodyString
   }
-  get lastUpdate(){
-    if(this._lastUpdate === null)
-      this._lastUpdate = new Date()
+  get lastTimeRequested(){  
+    if(this._lastTimeRequested === null)
+      this._lastTimeRequested = new Date()
 
-    let formattedDate =  this._formatDate(this._lastUpdate)
-
-    return formattedDate
+    return this._formatDate(this._lastTimeRequested)
   }
   _formatDate(date){
     let formmatedDate = date
-      .toLocaleDateString('US-en', 
+      .toLocaleDateString('US-en',
       {year: 'numeric', month: '2-digit', day: 'numeric', 
        hour:'numeric', minute:'numeric', second: 'numeric'})
     
-    return encodeURIComponent(formmatedDate)
+    return formmatedDate
   }
 }
-
-new giveawayCityAPI().getNewGiveaways().then((res) => console.log(res))

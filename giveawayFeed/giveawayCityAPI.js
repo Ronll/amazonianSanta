@@ -18,7 +18,7 @@ const
 
 class giveawayCityAPI {
   constructor(){
-    this._lastTimeRequested = null
+    this._lastRequestTime = new Date()
     this._headers = HEADERS,
     this._url = URL
   }
@@ -29,38 +29,38 @@ class giveawayCityAPI {
       headers: this._headers,
       body: this._generateBody()
     }
-
-    let getNewGiveaways = request(options)
+    let newGiveawaysRequest = request(options)
     .then((res) => {
       let JSONRes = JSON.parse(res)
       let newGiveaways = JSONRes["Records"]["new_giveaways"]["Records"]
-      this._lastTimeRequested = new Date()
+
+      if(newGiveaways.length > 0)
+        this._lastRequestTime = new Date()
+        
       return newGiveaways
     }).catch((err) => {
-      console.log('error with request to giveawaycity, retrying...')
+      console.log('error with request to giveawaycity')
       console.log(err)
     })
 
-    return getNewGiveaways
+    return newGiveawaysRequest
   }
   _generateBody(){
     let bodyString = 
-      querystring.stringify({ "actions[]" : "get_new" , "start_time": this.lastTimeRequested})
+      querystring.stringify({ "actions[]" : "get_new" , "start_time": this.lastRequestTime})
     
     return bodyString
   }
-  get lastTimeRequested(){  
-    if(this._lastTimeRequested === null)
-      this._lastTimeRequested = new Date()
-
-    return this._formatDate(this._lastTimeRequested)
+  get lastRequestTime(){  
+    return this._formatDate(this._lastRequestTime)
   }
   _formatDate(date){
-    let formmatedDate = date
-      .toLocaleDateString('US-en',
+    let formmatedDate = date.toLocaleDateString('US-en',
       {year: 'numeric', month: '2-digit', day: 'numeric', 
        hour:'numeric', minute:'numeric', second: 'numeric'})
     
     return formmatedDate
   }
 }
+
+module.exports = giveawayCityAPI

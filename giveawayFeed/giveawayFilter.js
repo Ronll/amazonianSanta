@@ -24,6 +24,8 @@ class GiveawayFilter extends stream.Transform {
   _transform(giveaway, encoding, callback){
     if(didPassFilters(giveaway))
       callback(null, giveaway)
+    else
+      callback(null, null)
   }
 }
 

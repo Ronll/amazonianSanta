@@ -12,7 +12,7 @@ const
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Referer': 'https://giveaway.city/',
-    'X-Requested-With': 'XMLHttpRequest ',
+    'X-Requested-With': 'XMLHttpRequest',
     'Connection': 'keep-alive'
   }
 

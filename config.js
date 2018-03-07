@@ -1,15 +1,11 @@
-const
-  PRODUCT_OTHER = 0,
-  PRODUCT_BOOKS = 1,
-  PRODUCT_KINDLE = 2,
-  REQ_NONE = 0,
-  REQ_AMAZON_FOLLOW = 3,
-  REQ_VIDEO = 4
+const 
+  PRODUCT_TYPE = require('./common/giveaway').PRODUCT_TYPE,
+  GA_REQUIRMENT = require('./common/giveaway').GA_REQUIRMENT
 
 module.exports = {
   giveawayFilters: {
-    acceptedRequirements: [REQ_NONE],
-    acceptedProducts: [PRODUCT_OTHER, PRODUCT_BOOKS, PRODUCT_KINDLE],
+    acceptedRequirements: [GA_REQUIRMENT.NONE],
+    acceptedProducts: [PRODUCT_TYPE.OTHER, PRODUCT_TYPE.BOOKS, PRODUCT_TYPE.KINDLE],
     minimumProductValue: null,
     maxOddsPerEntry: null,
     maxEntrantRequirement: null 

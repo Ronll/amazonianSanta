@@ -2,7 +2,8 @@ const stream = require('stream')
 
 const 
   GiveawayCityAPI = require('./giveawayCityAPI'),
-  giveawayConfig = require('../config.js')
+  Giveaway = require('../common/giveaway').Giveaway,
+  giveawayConfig = require('../config')
 
 const 
   FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 5,
@@ -25,7 +26,7 @@ class GiveawayStream extends stream.Readable {
     giveawayReqeust.then((giveaways) => {
 
       for(let ga of giveaways)
-        this.push(ga)
+        this.push(Giveaway.newGiveawayFromgaCityObject(ga))
 
     }).catch((err) => {
       console.log(err)

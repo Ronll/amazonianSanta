@@ -11,7 +11,7 @@ const
   }
 
 class Giveaway {
-  constructor(amazonID, requirment, odds, price, productType, productImageURL, prizeCount, titlet) {
+  constructor(amazonID, requirment, odds, price, productType, productImageURL, prizeCount, title) {
     this.amazonID = amazonID
     this.requirment = requirment
     this.odds = odds
@@ -26,13 +26,13 @@ class Giveaway {
   static newGiveawayFromgaCityObject(gaCityObject){
     let 
       amazonID = gaCityObject['id'],
-      odds = gaCityObject['odds'],
+      odds = Number(gaCityObject['odds']),
       price = gaCityObject['price'],
       productImageURL = gaCityObject['productImageLarge'],
-      prizeCount = gaCityObject['prizeCount'],
-      title = gaCityObject['title']
-      productType = convertRequirmentCode(gaCityObject['productType']),
-      requirment = convertRequirmentCode(gaCityObject['requirment'])
+      prizeCount = Number(gaCityObject['prizeCount']),
+      title = gaCityObject['title'],
+      productType = convertRequirmentCode(Number(gaCityObject['productType'])),
+      requirment = convertRequirmentCode(Number(gaCityObject['requirement']))
 
     return new Giveaway(
       amazonID, 

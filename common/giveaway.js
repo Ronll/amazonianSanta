@@ -4,16 +4,16 @@ const
     BOOKS : 1,
     KINDLE : 2,
   },
-  GA_REQUIRMENT = {
+  GA_REQUIREMENT = {
     NONE : 0,
     AMAZON_FOLLOW : 1,
     VIDEO : 2
   }
 
 class Giveaway {
-  constructor(amazonID, requirment, odds, price, productType, productImageURL, prizeCount, title) {
+  constructor(amazonID, requirement, odds, price, productType, productImageURL, prizeCount, title) {
     this.amazonID = amazonID
-    this.requirment = requirment
+    this.requirement = requirement
     this.odds = odds
     this.price = price
     this.productType = productType
@@ -31,12 +31,12 @@ class Giveaway {
       productImageURL = gaCityObject['productImageLarge'],
       prizeCount = Number(gaCityObject['prizeCount']),
       title = gaCityObject['title'],
-      productType = convertRequirmentCode(Number(gaCityObject['productType'])),
-      requirment = convertRequirmentCode(Number(gaCityObject['requirement']))
+      productType = convertProductTypeCode(Number(gaCityObject['productType'])),
+      requirement = convertRequirementCode(Number(gaCityObject['requirement']))
 
     return new Giveaway(
       amazonID, 
-      requirment, 
+      requirement, 
       odds, 
       price, 
       productType, 
@@ -47,16 +47,16 @@ class Giveaway {
   }
 }
 
-function convertRequirmentCode(giveawayCityReqCode){
+function convertRequirementCode(giveawayCityReqCode){
   switch (giveawayCityReqCode) {
     case 0:
-      return GA_REQUIRMENT.NONE
+      return GA_REQUIREMENT.NONE
       break
     case 3:
-      return GA_REQUIRMENT.AMAZON_FOLLOW
+      return GA_REQUIREMENT.AMAZON_FOLLOW
       break
     case 4:
-      return GA_REQUIRMENT.VIDEO
+      return GA_REQUIREMENT.VIDEO
       break
   }
 }
@@ -75,5 +75,5 @@ function convertRequirmentCode(giveawayCityReqCode){
     }
 }
 
-module.exports = {Giveaway, PRODUCT_TYPE, GA_REQUIRMENT}
+module.exports = {Giveaway, PRODUCT_TYPE, GA_REQUIREMENT}
 

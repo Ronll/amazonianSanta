@@ -26,7 +26,7 @@ class GiveawayStream extends stream.Readable {
     giveawayReqeust.then((giveaways) => {
 
       for(let ga of giveaways)
-        this.push(Giveaway.newGiveawayFromgaCityObject(ga))
+        this.push(Giveaway.fromGACityObject(ga))
 
     }).catch((err) => {
       console.log(err)

@@ -3,13 +3,16 @@ const
   devices = require('puppeteer/DeviceDescriptors')
 
 const
+  VIDEO_WAIT_TIME_IN_MS = 40000,
   KEEP_SIGEND_INPUT_SELECTOR = 'input[type="checkbox"]',
   AMAZON_GIVEAWAY_URL = 'https://www.amazon.com/ga/p/',
   SIGN_IN_INPUT_SELECTOR = '#signInSubmit',
   BOX_DIV_SELECTOR = '#giveaway-social-container',
   ENTER_BTN_SELECTOR ='#ts_en_enter',
+  FOLLOW_BTN_SELECTOR = 'input[name="follow"]',
+  VIDEO_CONTINUE_BTN_SELECTOR = 'input[name="continue"]',
   RESULT_SPAN_SELECTOR = '#title',
-  DID_NOT_WIN = 'you didn\'t win',
+  DID_WIN = 'you won',
   DEVICE_TO_EMULATE = devices['iPad'],
   AMAZON_USERNAME = process.env.AMAZON_USERNAME,
   AMAZON_PASSWORD = process.env.AMAZON_PASSWORD,
@@ -107,17 +110,40 @@ class AmazonClicker {
     }
   }
   async getResult(){
-    await this.page.waitForSelector(RESULT_SPAN_SELECTOR, {visible: true})
-    let el = await this.page.$(RESULT_SPAN_SELECTOR)
-    let valueFieldProperty = await el.getProperty('innerHTML')
-    let result = await valueFieldProperty.jsonValue()
-  
-    if(result.includes(DID_NOT_WIN))
-      return false
-    else{
-      await this.page.screenshot({path: 'winning.png'})
-      console.log('WON!')
-      return true
+    try{
+      await this.page.waitForSelector(RESULT_SPAN_SELECTOR, {visible: true})
+      let el = await this.page.$(RESULT_SPAN_SELECTOR)
+      let valueFieldProperty = await el.getProperty('innerHTML')
+      let result = await valueFieldProperty.jsonValue()
+    
+      if(result.includes(DID_WIN)){
+        await this.page.screenshot({path: 'winning.png'})
+        console.log('WON!')
+        return true
+      }
+      else
+        return false
+    }catch(e){
+      await this.page.screenshot({path: 'could_not_get_result.png'})
+      throw 'could not get result'
+    }
+  }
+  async clickFollow(){
+    try{
+      await this.page.waitForSelector(FOLLOW_BTN_SELECTOR)
+      await this.page.click(BOX_DIV_SELECTOR)
+    }catch(e){
+      await this.page.screenshot({path: 'could_not_click_follow.png'})
+      throw 'could not click follow'
+    }
+  }
+  async waitAndClickContinueBTN(){
+    try{
+      await this.page.waitForSelector(VIDEO_CONTINUE_BTN_SELECTOR, {visible: true, timeout: VIDEO_WAIT_TIME_IN_MS})
+      await this.page.click(VIDEO_CONTINUE_BTN_SELECTOR)
+    }catch(e){
+      await this.page.screenshot({path: 'could_not_wait_&_click_continue.png'})
+      throw 'could not wait and click continue'
     }
   }
 }

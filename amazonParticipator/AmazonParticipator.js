@@ -19,17 +19,17 @@ class GiveawayParticipator{
           await this.enterDrawing()
         else
           await this.enterGiveaway()
+          giveaway.didWin = await this.amazonClicker.getResult()
         break
       case Giveaway.GA_REQUIREMENT.VIDEO:
-        await this.playVideo()
+        await this.waitAndClickContinueBTN()
+        giveaway.didWin = await this.amazonClicker.getResult()
         break
       case Giveaway.GA_REQUIREMENT.AMAZON_FOLLOW:
-        this.follow()
+        await this.clickfollow()
+        giveaway.didWin = await this.amazonClicker.getResult()
         break
     }
-
-    giveaway.didWin = await this.amazonClicker.getResult()
-    return giveaway.didWin
   }
   async enterDrawing(){
     await this.amazonClicker.clickEnter()
@@ -37,8 +37,12 @@ class GiveawayParticipator{
   async enterGiveaway(){
     await this.amazonClicker.openBox()
   }
-  async playVideo(){}
-  async follow(){}
+  async waitAndClickContinueBTN(){
+    await this.amazonClicker.waitAndClickContinueBTN()
+  }
+  async clickFollow(){
+    await this.amazonClicker.clickFollow();
+  }
 }
 
 // ac.openGiveawayPage(amazonID)

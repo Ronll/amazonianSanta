@@ -33,19 +33,28 @@ class AmazonClicker {
       if(cookies === null)
         cookies = await this.getAmazonSession()
       
-      const browser = await puppeteer.launch({headless: false})
+      const browser = await puppeteer.launch({headless: true})
       this.page = await browser.newPage()
+
+      // This helps us look like a normal browser to avoid bot detection
+      await this.page.setExtraHTTPHeaders({
+        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+      });
       await this.page.setDefaultNavigationTimeout(0)
       await this.page.setCookie(...cookies)
 
       return this
-  }
+    }
   async getAmazonSession(){
     if(!process.env.AMAZON_USERNAME || !process.env.AMAZON_PASSWORD)
       throw 'missing amazon credentials'
 
-    const browser = await puppeteer.launch({headless: false})
+    const browser = await puppeteer.launch({headless: true})
     const page = await browser.newPage()
+    // This helps us look like a normal browser to avoid bot detection
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+    });
     //await page.emulate(DEVICE_TO_EMULATE)
   
     await page.goto(LOGIN_URL)
@@ -56,14 +65,16 @@ class AmazonClicker {
     let passwordInputElement = await page.$(PASSWORD_INPUT_SELECTOR)
     await passwordInputElement.type(AMAZON_PASSWORD, {delay: 100})
 
+    console.log('entered credentials')
+    
     let keepMeSignedInInputElement = await page.$(KEEP_SIGEND_INPUT_SELECTOR)
     await keepMeSignedInInputElement.click()
-  
+    
     await page.click(SUBMIT_INPUT_SELECTOR)
+    console.log('submitted login form')
     await page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
-  
     await page.screenshot({path: 'aftersubmit.png'})
-  
+    
     //TODO: handle a case where identity confirmation is needed
     //if(await page.title() === CONFIRM_IDENTITY_PAGE_TITLE){
     //  let confirmByEmailInputElement = await page.$(CONFIRM_BY_EMAIL_INPUT_SELECTOR)

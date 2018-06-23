@@ -3,7 +3,7 @@ const
   devices = require('puppeteer/DeviceDescriptors')
 
 const
-  VIDEO_WAIT_TIME_IN_MS = 40000,
+  VIDEO_MAX_WAIT_TIME_IN_MS = 40000,
   KEEP_SIGEND_INPUT_SELECTOR = 'input[type="checkbox"]',
   AMAZON_GIVEAWAY_URL = 'https://www.amazon.com/ga/p/',
   SIGN_IN_INPUT_SELECTOR = '#signInSubmit',
@@ -153,7 +153,7 @@ class AmazonClicker {
   }
   async waitAndClickContinueBTN(){
     try{
-      await this.page.waitForSelector(VIDEO_CONTINUE_BTN_SELECTOR, {visible: true, timeout: VIDEO_WAIT_TIME_IN_MS})
+      await this.page.waitForSelector(VIDEO_CONTINUE_BTN_SELECTOR, {visible: true, timeout: VIDEO_MAX_WAIT_TIME_IN_MS})
       await this.page.click(VIDEO_CONTINUE_BTN_SELECTOR)
     }catch(e){
       await this.page.screenshot({path: 'could_not_wait_&_click_continue.png'})

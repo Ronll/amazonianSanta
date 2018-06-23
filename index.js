@@ -1,9 +1,9 @@
 (async () =>{
 
   const
-    GiveawayStream = require('./giveawayFeed/giveawayStream'),
-    GiveawayFilter = require('./giveawayFeed/giveawayFilter'),
-    AmazonParticipator = require('./amazonParticipator/AmazonParticipator')
+    GiveawayStream = require('./src/giveawayFeed/giveawayStream'),
+    GiveawayFilter = require('./src/giveawayFeed/giveawayFilter'),
+    AmazonParticipator = require('./src/amazonParticipator/AmazonParticipator')
   
   var giveawayFeed = new GiveawayStream()
   var giveawayFilter = new GiveawayFilter()

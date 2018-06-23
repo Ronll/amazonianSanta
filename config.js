@@ -1,11 +1,11 @@
 const 
-  PRODUCT_TYPE = require('./common/giveaway').PRODUCT_TYPE,
-  GA_REQUIREMENT = require('./common/giveaway').GA_REQUIREMENT
+  PRODUCT_TYPE = require('./src/common/giveaway').PRODUCT_TYPE,
+  GA_REQUIREMENT = require('./src/common/giveaway').GA_REQUIREMENT
 
 module.exports = {
   giveawayFilters: {
-    acceptedRequirements: [GA_REQUIREMENT.NONE],
-    acceptedProducts: [PRODUCT_TYPE.OTHER, PRODUCT_TYPE.BOOKS, PRODUCT_TYPE.KINDLE],
+    acceptedRequirements: [GA_REQUIREMENT.NONE, GA_REQUIREMENT.AMAZON_FOLLOW, GA_REQUIREMENT.VIDEO],
+    acceptedProducts: [PRODUCT_TYPE.OTHER, PRODUCT_TYPE.BOOKS],
     minimumProductValue: null,
     maxOddsPerEntry: null,
     maxEntrantRequirement: null 

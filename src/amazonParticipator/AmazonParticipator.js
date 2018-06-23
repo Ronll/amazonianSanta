@@ -26,7 +26,7 @@ class GiveawayParticipator{
         giveaway.didWin = await this.amazonClicker.getResult()
         break
       case Giveaway.GA_REQUIREMENT.AMAZON_FOLLOW:
-        await this.clickfollow()
+        await this.clickFollow()
         giveaway.didWin = await this.amazonClicker.getResult()
         break
     }

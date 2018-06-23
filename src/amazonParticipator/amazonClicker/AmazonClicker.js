@@ -33,7 +33,9 @@ class AmazonClicker {
       if(cookies === null)
         cookies = await this.getAmazonSession()
       
-      const browser = await puppeteer.launch({headless: true})
+      const browser = await puppeteer.launch({
+        args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox']
+      })
       this.page = await browser.newPage()
 
       // This helps us look like a normal browser to avoid bot detection
@@ -49,14 +51,15 @@ class AmazonClicker {
     if(!process.env.AMAZON_USERNAME || !process.env.AMAZON_PASSWORD)
       throw 'missing amazon credentials'
 
-    const browser = await puppeteer.launch({headless: true})
+    const browser = await puppeteer.launch({
+      args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox']
+    })
     const page = await browser.newPage()
     // This helps us look like a normal browser to avoid bot detection
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
     });
-    //await page.emulate(DEVICE_TO_EMULATE)
-  
+    
     await page.goto(LOGIN_URL)
   
     let emailInputElement = await page.$(EMAIL_INPUT_SELECTOR)

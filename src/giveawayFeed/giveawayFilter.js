@@ -1,7 +1,7 @@
 const stream = require('stream')
 
 const 
-  giveawayConfig = require('../config.js'),
+  giveawayConfig = require('../../config.js'),
   GA_REQUIREMENT = require('../common/giveaway').GA_REQUIREMENT,
   PRODUCT_TYPE = require('../common/giveaway').PRODUCT_TYPE
 

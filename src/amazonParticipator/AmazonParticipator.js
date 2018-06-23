@@ -45,13 +45,4 @@ class GiveawayParticipator{
   }
 }
 
-// ac.openGiveawayPage(amazonID)
-// .then(() => {
-//   return ac.openBox()
-// }).then(() => {
-
-//   console.log( ac.getResult())
-  
-// })
-
 module.exports = GiveawayParticipator

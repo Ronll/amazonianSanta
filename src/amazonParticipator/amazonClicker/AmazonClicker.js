@@ -3,6 +3,7 @@ const
   devices = require('puppeteer/DeviceDescriptors')
 
 const
+  CONTAINER_CHROME_PATH = '/usr/bin/chromium-browser',
   VIDEO_MAX_WAIT_TIME_IN_MS = 40000,
   KEEP_SIGEND_INPUT_SELECTOR = 'input[type="checkbox"]',
   AMAZON_GIVEAWAY_URL = 'https://www.amazon.com/ga/p/',
@@ -30,29 +31,33 @@ class AmazonClicker {
   constructor(cookies = null){
   }
   async constructorAsync(cookies = null){
-      if(cookies === null)
-        cookies = await this.getAmazonSession()
-      
-      const browser = await puppeteer.launch({
-        args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox']
-      })
-      this.page = await browser.newPage()
+    if(cookies === null)
+      cookies = await this.getAmazonSession()
+    
+    console.log('setting up browser')
+    const browser = await puppeteer.launch({
+      args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: CONTAINER_CHROME_PATH //needed when running in a container
+    })
+    this.page = await browser.newPage()
+    await this.page.setDefaultNavigationTimeout(0)
+    await this.page.setCookie(...cookies)
+    
+    // This helps us look like a normal browser to avoid bot detection
+    await this.page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+    });
 
-      // This helps us look like a normal browser to avoid bot detection
-      await this.page.setExtraHTTPHeaders({
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
-      });
-      await this.page.setDefaultNavigationTimeout(0)
-      await this.page.setCookie(...cookies)
-
-      return this
-    }
+    return this
+  }
   async getAmazonSession(){
+    console.log('getting amazon session')
     if(!process.env.AMAZON_USERNAME || !process.env.AMAZON_PASSWORD)
       throw 'missing amazon credentials'
 
     const browser = await puppeteer.launch({
-      args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: CONTAINER_CHROME_PATH //needed when running in a container
     })
     const page = await browser.newPage()
     // This helps us look like a normal browser to avoid bot detection
@@ -75,6 +80,7 @@ class AmazonClicker {
     
     await page.click(SUBMIT_INPUT_SELECTOR)
     console.log('submitted login form')
+
     await page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
     await page.screenshot({path: 'aftersubmit.png'})
     

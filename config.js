@@ -9,5 +9,6 @@ module.exports = {
     minimumProductValue: null,
     maxOddsPerEntry: null,
     maxEntrantRequirement: null 
-  }
+  },
+  logLevel : process.env.LOG_LEVEL || 'debug' //info, debug, error
 }

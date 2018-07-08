@@ -3,7 +3,8 @@ const stream = require('stream')
 const 
   giveawayConfig = require('../../config.js'),
   GA_REQUIREMENT = require('../common/giveaway').GA_REQUIREMENT,
-  PRODUCT_TYPE = require('../common/giveaway').PRODUCT_TYPE
+  PRODUCT_TYPE = require('../common/giveaway').PRODUCT_TYPE,
+  log = require('../common/logger')
 
 const
   ACCEPTED_PRODUCTS = giveawayConfig.giveawayFilters.acceptedProducts,
@@ -37,7 +38,7 @@ function productTypeFilter(giveaway){
   if(ACCEPTED_PRODUCTS.includes(giveaway.productType))
     return true
   else{
-    console.log(`FILTERED: product type:${giveaway.productType}, id: ${giveaway.amazonID}`)
+    log.info(`FILTERED: product type:${giveaway.productType}, id: ${giveaway.amazonID}`)
     return false
   }
 }
@@ -46,7 +47,7 @@ function requirementsFilter(giveaway){
   if(ACCEPTED_REQUIREMENTS.includes(giveaway.requirement))
     return true
   else{
-    console.log(`FILTERED: requirement code:${giveaway.requirement}, id: ${giveaway.amazonID}`)
+    log.info(`FILTERED: requirement code:${giveaway.requirement}, id: ${giveaway.amazonID}`)
     return false
   }
 }
@@ -55,7 +56,7 @@ function productPriceFilter(giveaway){
   if(MINIMUM_PRODUCT_PRICE === null || MINIMUM_PRODUCT_PRICE >= giveaway.price)
     return true
   else{
-    console.log(`FILTERED: product price:${giveaway.price}, id: ${giveaway.amazonID}`)
+    log.info(`FILTERED: product price:${giveaway.price}, id: ${giveaway.amazonID}`)
     return false
   }
 }
@@ -64,7 +65,7 @@ function oddsFilter(giveaway){
   if(MAX_ODDS_PER_ENTRY === null || MAX_ODDS_PER_ENTRY <= giveaway.odds)
     return true
   else{
-    console.log(`FILTERED: raffle odds:${giveaway.odds}, id: ${giveaway.amazonID}`)
+    log.info(`FILTERED: raffle odds:${giveaway.odds}, id: ${giveaway.amazonID}`)
     return false
   }
 }

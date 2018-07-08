@@ -1,6 +1,7 @@
 const 
   puppeteer = require('puppeteer'),
-  devices = require('puppeteer/DeviceDescriptors')
+  devices = require('puppeteer/DeviceDescriptors'),
+  log = require('../../common/logger')
 
 const
   CONTAINER_CHROME_PATH = '/usr/bin/chromium-browser',
@@ -31,58 +32,50 @@ class AmazonClicker {
   constructor(cookies = null){
   }
   async constructorAsync(cookies = null){
-    if(cookies === null)
-      cookies = await this.getAmazonSession()
-    
-    console.log('setting up browser')
+
     const browser = await puppeteer.launch({
       args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox'],
       executablePath: CONTAINER_CHROME_PATH //needed when running in a container
     })
+
     this.page = await browser.newPage()
+
     await this.page.setDefaultNavigationTimeout(0)
-    await this.page.setCookie(...cookies)
-    
+
     // This helps us look like a normal browser to avoid bot detection
     await this.page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
     });
 
+    if(cookies === null)
+      cookies = await this.getAmazonSession()
+    
+    await this.page.setCookie(...cookies)
+    
     return this
   }
   async getAmazonSession(){
-    console.log('getting amazon session')
+    log.debug('getting amazon session')
+
     if(!process.env.AMAZON_USERNAME || !process.env.AMAZON_PASSWORD)
       throw 'missing amazon credentials'
 
-    const browser = await puppeteer.launch({
-      args: ['--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: CONTAINER_CHROME_PATH //needed when running in a container
-    })
-    const page = await browser.newPage()
-    // This helps us look like a normal browser to avoid bot detection
-    await page.setExtraHTTPHeaders({
-      'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
-    });
-    
-    await page.goto(LOGIN_URL)
+    await this.page.goto(LOGIN_URL)
   
-    let emailInputElement = await page.$(EMAIL_INPUT_SELECTOR)
+    let emailInputElement = await this.page.$(EMAIL_INPUT_SELECTOR)
     await emailInputElement.type(AMAZON_USERNAME, {delay: 100})
   
-    let passwordInputElement = await page.$(PASSWORD_INPUT_SELECTOR)
+    let passwordInputElement = await this.page.$(PASSWORD_INPUT_SELECTOR)
     await passwordInputElement.type(AMAZON_PASSWORD, {delay: 100})
 
-    console.log('entered credentials')
-    
-    let keepMeSignedInInputElement = await page.$(KEEP_SIGEND_INPUT_SELECTOR)
+    let keepMeSignedInInputElement = await this.page.$(KEEP_SIGEND_INPUT_SELECTOR)
     await keepMeSignedInInputElement.click()
     
-    await page.click(SUBMIT_INPUT_SELECTOR)
-    console.log('submitted login form')
-
-    await page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
-    await page.screenshot({path: 'aftersubmit.png'})
+    log.debug('Login form filled', await this._getScreenshot())
+    await this.page.click(SUBMIT_INPUT_SELECTOR)
+    
+    await this.page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
+    log.debug('Login form submitted', await this._getScreenshot())
     
     //TODO: handle a case where identity confirmation is needed
     //if(await page.title() === CONFIRM_IDENTITY_PAGE_TITLE){
@@ -91,9 +84,8 @@ class AmazonClicker {
     //  await page.click(CONFIRM_IDENTITY_OPTION_CONTINUE_BTN)
     //}
 
-    const cookies = await page.cookies(AMAZON_URL)
+    const cookies = await this.page.cookies(AMAZON_URL)
   
-    await browser.close()
     return cookies
   }
   async openGiveawayPage(amazonID){
@@ -117,7 +109,7 @@ class AmazonClicker {
       await this.page.waitForSelector(BOX_DIV_SELECTOR, {visible: true})
       await this.page.click(BOX_DIV_SELECTOR)
     }catch(e){
-      await this.page.screenshot({path: 'could_not_open_box.png'})
+      log.error('could not open box', await this._getScreenshot())
       throw 'could not open box'
     }
   }
@@ -125,7 +117,7 @@ class AmazonClicker {
     try{
       await this.page.click(ENTER_BTN_SELECTOR)
     }catch(e){
-      await this.page.screenshot({path: 'could_not_click_enter.png'})
+      log.error('could not click enter', await this._getScreenshot())
       throw 'could not click enter'
     }
   }
@@ -137,14 +129,13 @@ class AmazonClicker {
       let result = await valueFieldProperty.jsonValue()
     
       if(result.includes(DID_WIN)){
-        await this.page.screenshot({path: 'winning.png'})
-        console.log('WON!')
+        log.info('WON!', await this._getScreenshot())
         return true
       }
       else
         return false
     }catch(e){
-      await this.page.screenshot({path: 'could_not_get_result.png'})
+      log.error('could not get result', await this._getScreenshot())
       throw 'could not get result'
     }
   }
@@ -153,7 +144,7 @@ class AmazonClicker {
       await this.page.waitForSelector(FOLLOW_BTN_SELECTOR)
       await this.page.click(BOX_DIV_SELECTOR)
     }catch(e){
-      await this.page.screenshot({path: 'could_not_click_follow.png'})
+      log.error('could not click follow', await this._getScreenshot())
       throw 'could not click follow'
     }
   }
@@ -162,9 +153,19 @@ class AmazonClicker {
       await this.page.waitForSelector(VIDEO_CONTINUE_BTN_SELECTOR, {visible: true, timeout: VIDEO_MAX_WAIT_TIME_IN_MS})
       await this.page.click(VIDEO_CONTINUE_BTN_SELECTOR)
     }catch(e){
-      await this.page.screenshot({path: 'could_not_wait_&_click_continue.png'})
+      log.error('could not wait & click continue', await this._getScreenshot())
       throw 'could not wait and click continue'
     }
+  }
+  async _getScreenshot(){
+    let ss = await this.page.screenshot({
+      quality: 10, 
+      fullPage: true, 
+      encoding: 'base64', 
+      type: 'jpeg'
+    })
+
+    return ss.toString('base64')
   }
 }
 

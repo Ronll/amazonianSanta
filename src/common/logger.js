@@ -1,7 +1,6 @@
-const 
-  winston = require('winston')
+const winston = require('winston')
 
-const LOG_LEVEL = require('../../config').logLevel
+const logLevel = require('../../config').logLevel
 
 class Logger {
   constructor(loggingLevel){
@@ -42,6 +41,6 @@ class Logger {
   }
 }
 
-const logger = new Logger(LOG_LEVEL)
+const logger = new Logger(logLevel)
 
 module.exports = logger

@@ -3,18 +3,15 @@
   const
     GiveawayStream = require('./src/giveawayFeed/giveawayStream'),
     GiveawayFilter = require('./src/giveawayFeed/giveawayFilter'),
-    AmazonParticipator = require('./src/amazonParticipator/AmazonParticipator')
+    AmazonParticipatorTransform = require('./src/amazonParticipator/AmazonParticipatorTransform')
   
-  var giveawayFeed = new GiveawayStream()
-  var giveawayFilter = new GiveawayFilter()
-  var giveawayParticipator = await new AmazonParticipator().constructorAsync()
+  let
+    giveawayFeed = new GiveawayStream(),
+    giveawayFilter = new GiveawayFilter(),
+    amazonParticipatorTransform = await new AmazonParticipatorTransform().constructorAsync()
   
-  giveawayFeed.pipe(giveawayFilter).on('readable', async () => {
-    for(let ga = giveawayFilter.read(); ga !== null; ga = giveawayFilter.read()){
-      console.dir(ga)
-      await giveawayParticipator.participate(ga)
-      console.log(ga.didWin)
-    }
-  })
+  giveawayFeed
+    .pipe(giveawayFilter)
+    .pipe(amazonParticipatorTransform)
 
 })()

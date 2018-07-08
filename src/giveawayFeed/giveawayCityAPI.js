@@ -1,7 +1,8 @@
 const
-  fs = require('fs'),
   querystring = require('querystring'),
   request = require('request-promise-native')
+
+const log = require('../common/logger')
 
 const
   URL = 'https://giveaway.city/ajax/UpdateService',
@@ -38,9 +39,8 @@ class giveawayCityAPI {
         this._lastRequestTime = new Date()
         
       return newGiveaways
-    }).catch((err) => {
-      console.log('error with request to giveawaycity')
-      console.log(err)
+    }).catch((e) => {
+      log.error(`Issue with request to giveawaycity: ${e}`)
     })
 
     return newGiveawaysRequest
@@ -55,11 +55,10 @@ class giveawayCityAPI {
     return this._formatDate(this._lastRequestTime)
   }
   _formatDate(date){
-    let formmatedDate = date.toLocaleDateString('US-en',
-      {year: 'numeric', month: '2-digit', day: '2-digit', 
-       hour:'numeric', minute:'numeric', second: 'numeric'})
-    
-    return formmatedDate
+    return new Date()
+        .toISOString()        //YYYY-MM-DDTHH:mm:ss.sssZ
+        .substr(0, 19)        //YYYY-MM-DDTHH:mm:ss
+        .replace('T', ' ')    //YYYY-MM-DD HH:mm:ss
   }
 }
 

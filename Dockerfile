@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get update && apt-get install -y curl gnupg2 chromium-browser 
 
 # install node & npm
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && apt-get update && apt-get install -yq nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get update && apt-get install -yq nodejs
 
 RUN groupadd -r pptruser \
     && useradd -r -g pptruser -G audio,video pptruser \

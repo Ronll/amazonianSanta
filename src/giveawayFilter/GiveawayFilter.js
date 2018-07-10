@@ -16,7 +16,8 @@ const
 class GiveawayFilter extends stream.Transform {
   constructor() { 
     super({
-      objectMode: true
+      objectMode: true,
+      highWaterMark: 100
     })
   }
   _transform(giveaway, encoding, callback){

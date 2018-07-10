@@ -56,9 +56,9 @@ class GiveawayCityAPI {
   }
   _formatDate(date){
     return date
-        .toISOString()        //YYYY-MM-DDTHH:mm:ss.sssZ
-        .substr(0, 19)        //YYYY-MM-DDTHH:mm:ss
-        .replace('T', ' ')    //YYYY-MM-DD HH:mm:ss
+      .toISOString()        //YYYY-MM-DDTHH:mm:ss.sssZ
+      .substr(0, 19)        //YYYY-MM-DDTHH:mm:ss
+      .replace('T', ' ')    //YYYY-MM-DD HH:mm:ss
   }
 }
 

@@ -1,7 +1,7 @@
 const 
   puppeteer = require('puppeteer'),
   devices = require('puppeteer/DeviceDescriptors'),
-  log = require('../../common/logger')
+  log = require('../../common/Logger')
 
 const
   CONTAINER_CHROME_PATH = '/usr/bin/chromium-browser',

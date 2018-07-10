@@ -1,7 +1,7 @@
 const stream = require('stream')
 
 const 
-  GiveawayCityAPI = require('./giveawayCityAPI'),
+  GiveawayCityAPI = require('./GiveawayCityAPI'),
   Giveaway = require('../common/Giveaway').Giveaway,
   giveawayConfig = require('../../config'),
   log = require('../common/Logger')

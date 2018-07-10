@@ -1,6 +1,6 @@
 const
   AmazonClicker = require('./amazonClicker/AmazonClicker'),
-  Giveaway = require('../common/giveaway')
+  Giveaway = require('../common/Giveaway')
 
 
 class GiveawayParticipator{

@@ -2,7 +2,7 @@ const stream = require('stream')
 
 const
   AmazonParticipator = require('./AmazonParticipator'),
-  log = require('../common/logger')
+  log = require('../common/Logger')
 
 class AmazonParticipatorTransform extends stream.Transform {
   constructor() { 

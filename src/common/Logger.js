@@ -1,6 +1,6 @@
 const winston = require('winston')
 
-const logLevel = require('../../config').logLevel
+const logLevel = require('../../config').LOG_LEVEL
 
 class Logger {
   constructor(loggingLevel){
@@ -31,11 +31,11 @@ class Logger {
 
     this._logger.log(l)
   }
-  _generateLogObject(level, message, base64IMG = null){
+  _generateLogObject(level, message, base64Screenshot = null){
     let l = {level, message}
 
-    if(base64IMG)
-      l.screenshot = base64IMG
+    if(base64Screenshot)
+      l.screenshot = base64Screenshot
 
     return l
   }

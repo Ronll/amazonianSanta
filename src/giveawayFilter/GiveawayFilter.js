@@ -2,9 +2,9 @@ const stream = require('stream')
 
 const 
   giveawayConfig = require('../../config.js'),
-  GA_REQUIREMENT = require('../common/giveaway').GA_REQUIREMENT,
-  PRODUCT_TYPE = require('../common/giveaway').PRODUCT_TYPE,
-  log = require('../common/logger')
+  GA_REQUIREMENT = require('../common/Giveaway').GA_REQUIREMENT,
+  PRODUCT_TYPE = require('../common/Giveaway').PRODUCT_TYPE,
+  log = require('../common/Logger')
 
 const
   ACCEPTED_PRODUCTS = giveawayConfig.giveawayFilters.acceptedProducts,

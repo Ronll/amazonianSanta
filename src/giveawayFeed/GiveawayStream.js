@@ -2,9 +2,9 @@ const stream = require('stream')
 
 const 
   GiveawayCityAPI = require('./giveawayCityAPI'),
-  Giveaway = require('../common/giveaway').Giveaway,
+  Giveaway = require('../common/Giveaway').Giveaway,
   giveawayConfig = require('../../config'),
-  log = require('../common/logger')
+  log = require('../common/Logger')
 
 const 
   FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 5,

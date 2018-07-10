@@ -2,7 +2,7 @@ const
   querystring = require('querystring'),
   request = require('request-promise-native')
 
-const log = require('../common/logger')
+const log = require('../common/Logger')
 
 const
   URL = 'https://giveaway.city/ajax/UpdateService',
@@ -55,7 +55,7 @@ class giveawayCityAPI {
     return this._formatDate(this._lastRequestTime)
   }
   _formatDate(date){
-    return new Date()
+    return date
         .toISOString()        //YYYY-MM-DDTHH:mm:ss.sssZ
         .substr(0, 19)        //YYYY-MM-DDTHH:mm:ss
         .replace('T', ' ')    //YYYY-MM-DD HH:mm:ss

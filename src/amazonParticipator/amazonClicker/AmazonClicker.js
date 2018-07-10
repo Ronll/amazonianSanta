@@ -74,7 +74,7 @@ class AmazonClicker {
     log.debug('Login form filled', await this._getScreenshot())
     await this.page.click(SUBMIT_INPUT_SELECTOR)
     
-    await this.page.waitForNavigation({waitUntil: ['load','domcontentloaded','networkidle0']})
+    await this.page.waitForNavigation({waitUntil: ['load','domcontentloaded']})
     log.debug('Login form submitted', await this._getScreenshot())
     
     //TODO: handle a case where identity confirmation is needed

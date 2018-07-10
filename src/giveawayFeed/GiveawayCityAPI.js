@@ -1,6 +1,4 @@
-const
-  querystring = require('querystring'),
-  request = require('request-promise-native')
+const request = require('request-promise-native')
 
 const log = require('../common/Logger')
 
@@ -46,19 +44,20 @@ class GiveawayCityAPI {
     return newGiveawaysRequest
   }
   _generateBody(){
-    let bodyString = 
-      querystring.stringify({ "actions[]" : "get_new" , "start_time": this.lastRequestTime})
-    
-    return bodyString
-  }
-  get lastRequestTime(){  
-    return this._formatDate(this._lastRequestTime)
+    return `actions%5B%5D=get_new&start_time=${this._formatDate(this._lastRequestTime)}`
   }
   _formatDate(date){
-    return date
-      .toISOString()        //YYYY-MM-DDTHH:mm:ss.sssZ
-      .substr(0, 19)        //YYYY-MM-DDTHH:mm:ss
-      .replace('T', ' ')    //YYYY-MM-DD HH:mm:ss
+    let countFromOne = 1
+
+    let
+      year = date.getFullYear(),
+      month = (date.getMonth()+countFromOne).toString().padStart(2, '0'),
+      day = date.getDate().toString().padStart(2, '0'),
+      hours = date.getHours().toString().padStart(2, '0'),
+      minutes = date.getMinutes().toString().padStart(2, '0'),
+      seconds = date.getSeconds().toString().padStart(2, '0')
+
+    return `${year}-${month}-${day}+${hours}%3A${minutes}%3A${seconds}`
   }
 }
 

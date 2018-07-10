@@ -17,7 +17,7 @@ const
     'Connection': 'keep-alive'
   }
 
-class giveawayCityAPI {
+class GiveawayCityAPI {
   constructor(){
     this._lastRequestTime = new Date()
     this._headers = HEADERS,
@@ -62,4 +62,4 @@ class giveawayCityAPI {
   }
 }
 
-module.exports = giveawayCityAPI
+module.exports = GiveawayCityAPI

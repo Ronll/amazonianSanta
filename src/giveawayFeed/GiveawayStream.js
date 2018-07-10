@@ -6,8 +6,7 @@ const
   giveawayConfig = require('../../config'),
   log = require('../common/Logger')
 
-const 
-  FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 5,
+const FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 5
 
 class GiveawayStream extends stream.Readable {
   constructor() { 

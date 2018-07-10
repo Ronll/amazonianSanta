@@ -8,11 +8,14 @@ const
 
 const 
   FIVE_MINUTES_IN_MILLISECONDS = 1000 * 60 * 5,
-  options = { highWaterMark: 100, objectMode: true }
 
 class GiveawayStream extends stream.Readable {
   constructor() { 
-    super(options)
+    super({
+      highWaterMark: 100,
+      objectMode: true
+    })
+
     this.giveawayCityAPI = new GiveawayCityAPI()
     this.intervalPulling = null
   }

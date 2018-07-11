@@ -17,14 +17,11 @@ class AmazonParticipatorTransform extends stream.Transform {
   _transform(giveaway, encoding, callback){
 
     log.debug(`recived giveaway to participate in, ${giveaway.amazonID}`)
+
     this.participator.participate(giveaway)
-    .then(() => {
-      log.debug('participated')
-      callback(null, giveaway)
-    }).catch((e) => {
-      log.error(`Issue when trying to participate: ${e}`)
-      callback(e, null)
-    })
+    .then(() => log.debug('participated'))
+    .catch((e) => log.error(`Issue when trying to participate: ${e}, giveaway: ${giveaway.amazonID}`))
+    .then(() => callback(null, giveaway))
   }
 }
 

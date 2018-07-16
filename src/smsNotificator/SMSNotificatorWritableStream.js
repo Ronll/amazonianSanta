@@ -19,7 +19,7 @@ class SMSNotificatorWritableStream extends stream.Writable {
       this._sms.send(`Won: ${ga.title}, Image:${ga.productImageURL}`)
       log.info(`Sent winning notification: amazonID: ${ga.amazonID}, Title: ${ga.title}`)
     }else
-      log.debug(`Did not send sms for unwon giveaway: amazonID: ${ga.amazonID}, Title: ${ga.title}`)
+      log.debug(`Did not send sms for unwon giveaway: amazonID: ${ga.amazonID}`)
 
     callback()
   }

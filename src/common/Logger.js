@@ -32,7 +32,7 @@ class Logger {
     this._logger.log(l)
   }
   _generateLogObject(level, message, base64Screenshot = null){
-    let l = {level, message}
+    let l = { level, message }
 
     if(base64Screenshot)
       l.screenshot = base64Screenshot

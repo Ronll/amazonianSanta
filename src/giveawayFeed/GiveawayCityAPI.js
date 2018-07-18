@@ -44,15 +44,17 @@ class GiveawayCityAPI {
     return newGiveawaysRequest
   }
   _generateBody(){
-    return `actions%5B%5D=get_new&start_time=${this._formatDate(this._lastRequestTime)}`
+    let startTime = this._formatDate(this._lastRequestTime)
+    log.debug(`requesting GAs after: ${this._lastRequestTime.toLocaleString()}`)
+    return `actions%5B%5D=get_new&start_time=${startTime}`
   }
   _formatDate(date){
     let countFromOne = 1
 
     let
       year = date.getFullYear(),
-      month = (date.getMonth()+countFromOne).toString().padStart(2, '0'),
-      day = date.getDate().toString().padStart(2, '0'),
+      month = (date.getMonth() + countFromOne).toString().padStart(2, '0'),
+      day = date.getDate().toString().padStart(2, '0'), 
       hours = date.getHours().toString().padStart(2, '0'),
       minutes = date.getMinutes().toString().padStart(2, '0'),
       seconds = date.getSeconds().toString().padStart(2, '0')

@@ -50,6 +50,13 @@ class AmazonClicker {
     if(cookies === null)
       cookies = await this.getAmazonSession()
     
+    //TODO: Temporary fix, bug with puppeteer/devtools where null in cookies.expires.
+    log.info('using temporary fix if cookie.expires == null')
+    cookies = cookies.map(cookie => {
+      if(cookie.expires === null) cookie.expires = 2082787201
+      return cookie
+    })
+
     await this.page.setCookie(...cookies)
     
     return this

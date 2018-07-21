@@ -22,7 +22,7 @@ class GiveawayParticipator{
           giveaway.didWin = await this.amazonClicker.getResult()
         break
       case Giveaway.GA_REQUIREMENT.VIDEO:
-        await this.waitAndClickContinueBTN()
+        await this.handleVideoRequirement()
         giveaway.didWin = await this.amazonClicker.getResult()
         break
       case Giveaway.GA_REQUIREMENT.AMAZON_FOLLOW:
@@ -37,8 +37,8 @@ class GiveawayParticipator{
   async enterGiveaway(){
     await this.amazonClicker.openBox()
   }
-  async waitAndClickContinueBTN(){
-    await this.amazonClicker.waitAndClickContinueBTN()
+  async handleVideoRequirement(){
+    await this.amazonClicker.handleVideoRequirement()
   }
   async clickFollow(){
     await this.amazonClicker.clickFollow();

@@ -12,6 +12,7 @@ const
   BOX_DIV_SELECTOR = '#giveaway-social-container',
   ENTER_BTN_SELECTOR ='#ts_en_enter',
   FOLLOW_BTN_SELECTOR = 'input[name="follow"]',
+  AMAZON_VIDEO_SELECTOR = 'video',
   VIDEO_CONTINUE_BTN_SELECTOR = 'input[name="continue"]',
   RESULT_SPAN_SELECTOR = '#title',
   DID_WIN = 'you won',
@@ -155,7 +156,20 @@ class AmazonClicker {
       throw 'could not click follow'
     }
   }
-  async waitAndClickContinueBTN(){
+  async handleVideoRequirement(){
+    //two types of videos, amazon's HTML5 and youtube
+    if(await this._isVideoHTML5())
+      await this._playVideo()
+
+    await this._waitAndClickContinueBTN()
+  }
+  async _isVideoHTML5(){
+    return await this.page.$(AMAZON_VIDEO_SELECTOR)
+  }
+  async _playVideo(){
+    await this.page.click(AMAZON_VIDEO_SELECTOR)
+  }
+  async _waitAndClickContinueBTN(){
     try{
       await this.page.waitForSelector(VIDEO_CONTINUE_BTN_SELECTOR, {visible: true, timeout: VIDEO_MAX_WAIT_TIME_IN_MS})
       await this.page.click(VIDEO_CONTINUE_BTN_SELECTOR)

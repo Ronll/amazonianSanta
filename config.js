@@ -7,7 +7,10 @@ const config = Object.freeze({
   PHONENUMBER_TO_NOTIFY : '',
   TWILIO_ACCOUNT_SID : '',
   TWILIO_AUTH_TOKEN : '',
-  TWILIO_SOURCE_PHONENUMBER : ''
+  TWILIO_SOURCE_PHONENUMBER : '',
+  RL_TIMES_A_DAY: '',
+  RL_HOUR_RANGE_START: '',
+  RL_HOUR_RANGE_END: ''
 })
 
   
@@ -18,6 +21,13 @@ module.exports = Object.freeze({
     minimumProductValue: null,
     maxOddsPerEntry: null,
     maxEntrantRequirement: null 
+  },
+  giveawayRateLimiter: {
+    timesADay: getVariable('TIMES_A_DAY'),
+    hoursRange: {
+      start: getVariable('RATE_START_TIME'),
+      end: getVariable('RATE_END_TIME')
+    }
   },
   LOG_LEVEL: getVariable('LOG_LEVEL'),
   SMSNotification: {

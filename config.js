@@ -12,7 +12,6 @@ const config = Object.freeze({
   RL_HOUR_RANGE_START: '',
   RL_HOUR_RANGE_END: ''
 })
-
   
 module.exports = Object.freeze({
   giveawayFilters: {
@@ -25,8 +24,8 @@ module.exports = Object.freeze({
   giveawayRateLimiter: {
     timesADay: getVariable('TIMES_A_DAY'),
     hoursRange: {
-      start: getVariable('RATE_START_TIME'),
-      end: getVariable('RATE_END_TIME')
+      start: getVariable('RL_HOUR_RANGE_START'),
+      end: getVariable('RL_HOUR_RANGE_END')
     }
   },
   LOG_LEVEL: getVariable('LOG_LEVEL'),

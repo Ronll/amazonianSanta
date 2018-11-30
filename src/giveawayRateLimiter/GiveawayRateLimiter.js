@@ -6,41 +6,47 @@ const
 
 const
   GIVEAWAYS_A_DAY = giveawayConfig.giveawayRateLimiter.giveawaysADay
-  TIME_TO_PARTICIPATE = giveawayConfig.giveawayRateLimiter.timeToParticipate,
-  HALF_AN_HOUR_AHEAD_OF_START = TIME_TO_PARTICIPATE.start - 0.5
+  HOURS_RANGE = giveawayConfig.giveawayRateLimiter.hoursRange,
+  HALF_AN_HOUR_AHEAD_OF_START = HOURS_RANGE.start - 0.5
 
 class GiveawayRateLimiter extends stream.Transform {
   constructor() { 
-    this._giveawaysLeft = 0
-    
-    scheduleIntervalEvery24Hours(HALF_AN_HOUR_AHEAD_OF_START, this._scheduleNextReplenish())
-    
     super({
       objectMode: true,
       highWaterMark: 100
     })
+
+    this._giveawaysLeft = 0
+    
+    scheduleIntervalEvery24Hours(HALF_AN_HOUR_AHEAD_OF_START, this._scheduleNextReplenish())
   }
   _transform(giveaway, encoding, callback){
     if(this._giveawaysLeft > 0){
+      log.info(`Allowing giveaway within limit, ${giveaway.title}, ${giveaway.amazonID}`)
       this._giveawaysLeft--
+      log.debug(`current giveaway's left ${this._giveawaysLeft}`)
       callback(null, giveaway)
     }
-    else
+    else {
+      log.info(`Limit exceeded, throwing away ${giveaway.title}, ${giveaway.amazonID}`)
       callback(null, null)
+    }
   }
 
   _scheduleNextReplenish(){
     let 
-      start = nextDateWithHour(TIME_TO_PARTICIPATE.start),
-      end = nextDateWithHour(TIME_TO_PARTICIPATE.end)
+      start = nextDateWithHour(HOURS_RANGE.start),
+      end = nextDateWithHour(HOURS_RANGE.end)
 
       let replenishDate = getRandomDateBetweenDates(start, end)
+      log.info(`next random replenish date is ${replenishDate}`)
       let miliToDate = milisecondsUntilDate(replenishDate)
 
-      setTimeout(this._replenishGiveawaysleft(), miliToDate)
+      setTimeout(this._replenishGiveawaysleft, miliToDate)
   }
 
   _replenishGiveawaysleft() {
+    log.debug(`replenishing giveaways left, with another ${GIVEAWAYS_A_DAY} to ${this._giveawaysLeft + GIVEAWAYS_A_DAY}`)
     this._giveawaysLeft += GIVEAWAYS_A_DAY
   }
 }
@@ -49,7 +55,10 @@ function scheduleIntervalEvery24Hours(time, callback){
   nextDate = nextDateWithHour(time)
   miliToDate = milisecondsUntilDate(nextDate)
 
+  log.info(`scheduled setup interval to run at ${nextDate}`)
+
   setTimeout(()=>{
+    log.info(`Running scheduled function for the first time and setting a 24 hour interval`)
     callback()
     setInterval(callback, 1000 * 60 * 60 * 24)
   }, miliToDate)
@@ -70,7 +79,7 @@ function nextDateWithHour(time){
   var nextDateWithTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), time)
 
   if(now > nextDateWithTime){
-    log.info(`${nextDateWithTime} is in the past, opting for tomorrow`)
+    log.info(`${nextDateWithTime} has past, opting for tomorrow`)
     nextDateWithTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, time)
   }
 

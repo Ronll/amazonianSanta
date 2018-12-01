@@ -18,7 +18,7 @@ class GiveawayRateLimiter extends stream.Transform {
 
     this._giveawaysLeft = 0
     
-    scheduleIntervalEvery24Hours(HALF_AN_HOUR_AHEAD_OF_START, this._scheduleNextReplenish())
+    scheduleIntervalEvery24Hours(HALF_AN_HOUR_AHEAD_OF_START, this._scheduleNextReplenish)
   }
   _transform(giveaway, encoding, callback){
     if(this._giveawaysLeft > 0){

@@ -18,7 +18,7 @@ class GiveawayRateLimiter extends stream.Transform {
 
     this._giveawaysLeft = 0
     
-    scheduleIntervalEvery24Hours(HALF_AN_HOUR_AHEAD_OF_START, this._scheduleNextReplenish)
+    set24HourInterval(this._scheduleNextReplenish.bind(this), HALF_AN_HOUR_AHEAD_OF_START)
   }
   _transform(giveaway, encoding, callback){
     if(this._giveawaysLeft > 0){
@@ -51,7 +51,7 @@ class GiveawayRateLimiter extends stream.Transform {
   }
 }
 
-function scheduleIntervalEvery24Hours(time, callback){
+function set24HourInterval(callback, time){
   nextDate = nextDateWithHour(time)
   miliToDate = milisecondsUntilDate(nextDate)
 

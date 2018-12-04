@@ -42,7 +42,7 @@ class GiveawayRateLimiter extends stream.Transform {
       log.info(`next random replenish date is ${replenishDate}`)
       let miliToDate = milisecondsUntilDate(replenishDate)
 
-      setTimeout(this._replenishGiveawaysleft, miliToDate)
+      setTimeout(this._replenishGiveawaysleft.bind(this), miliToDate)
   }
 
   _replenishGiveawaysleft() {

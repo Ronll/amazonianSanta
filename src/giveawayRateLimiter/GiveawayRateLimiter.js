@@ -5,7 +5,7 @@ const
   log = require('../common/Logger')
 
 const
-  GIVEAWAYS_A_DAY = giveawayConfig.giveawayRateLimiter.giveawaysADay
+  GIVEAWAYS_A_DAY = giveawayConfig.giveawayRateLimiter.giveawaysADay,
   HOURS_RANGE = giveawayConfig.giveawayRateLimiter.hoursRange,
   HALF_AN_HOUR_AHEAD_OF_START = HOURS_RANGE.start - 0.5
 

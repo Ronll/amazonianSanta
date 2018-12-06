@@ -22,10 +22,10 @@ module.exports = Object.freeze({
     maxEntrantRequirement: null 
   },
   giveawayRateLimiter: {
-    allowedADay: getVariable('TIMES_A_DAY'),
+    allowedADay: parseInt(getVariable('RL_TIMES_A_DAY')),
     hoursRange: {
-      start: getVariable('RL_HOUR_RANGE_START'),
-      end: getVariable('RL_HOUR_RANGE_END')
+      start: parseInt(getVariable('RL_HOUR_RANGE_START')),
+      end: parseInt(getVariable('RL_HOUR_RANGE_END'))
     }
   },
   LOG_LEVEL: getVariable('LOG_LEVEL'),
